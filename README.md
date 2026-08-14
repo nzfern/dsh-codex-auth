@@ -1,6 +1,6 @@
 # dsh-codex-auth
 
-用 **ChatGPT 账号(Plus / Pro / Team / Enterprise)的 Codex 额度**在 DeepSeek Harness 里跑模型的认证插件。
+用 **ChatGPT 账号(Plus / Pro / Team / Enterprise)的 Codex 额度**在 DeepSeek Harness 里跑模型的认证插件,带 **Web UI 登录按钮**。
 
 ## 原理
 
@@ -10,14 +10,37 @@ Harness 自带的 `dsh-llm-pi-ai`(底层 pi-ai 库)已经内置了完整的 `ope
 
 `dsh-codex-auth` 补齐 OAuth 生命周期:
 
+- **UI 登录按钮**:侧边栏底部出现 "Codex" 按钮,点击即可发起登录,面板内显示验证链接 + 代码,实时显示状态;
 - **登录**:设备码流(和官方 Codex CLI 相同),得到长期有效的 refresh token,存入 Harness 凭据库
   (`$DSH_HOME/.credentials.yaml`,web 服务热加载,无需重启);
 - **续期**:启动时和每隔 30 秒检查 access token,临近过期就自动用 refresh token 换新的;
 - 配套 `/codex-login`、`/codex-status`、`/codex-logout` 命令和独立 CLI 脚本。
 
-## 安装
+## 一键安装(推荐,需要 pnpm)
 
-1. 把本目录(`dsh-codex-auth`)放到 profile 的插件目录,并注册为 bundle(见下文"接入 web profile");
+```powershell
+# 1. 确保 pnpm 可用(只需要一次)
+npm install -g pnpm
+
+# 2. 安装插件到 web profile(pnpm 自动从 GitHub 拉取并注册 bundle)
+dsh plugin --profile web add github:nzfern/dsh-codex-auth
+
+# 3. 激活 provider 并重启
+#    在 $DSH_HOME/settings.yaml 的 llm-pi-ai.providers 下加入:
+#      openai-codex:
+#        apiKeyEnv: OPENAI_CODEX_ACCESS_TOKEN
+#    然后重启 dsh web
+```
+
+也可以直接运行仓库里的 `install.ps1`(自动装 pnpm、装插件、写 settings.yaml):
+
+```powershell
+Set-ExecutionPolicy -Scope Process Bypass; iex (irm https://raw.githubusercontent.com/nzfern/dsh-codex-auth/main/install.ps1)
+```
+
+## 手动安装
+
+1. 把本目录(`dsh-codex-auth`)放到 profile 的插件目录,并注册为 bundle;
 2. 在 `$DSH_HOME/settings.yaml` 里激活 provider:
 
 ```yaml
@@ -31,9 +54,10 @@ llm-pi-ai:
 
 ## 登录
 
-网页端:在输入框输入 `/codex-login`,按提示打开 `https://auth.openai.com/codex/device` 输入显示在结果里的代码,用你的 ChatGPT 账号授权。
+网页端(推荐):重启后侧边栏底部出现 **Codex** 按钮,点击 → 面板显示验证链接与代码 → 浏览器打开
+`https://auth.openai.com/codex/device` 输入代码并用 ChatGPT 账号授权 → 面板自动变为"已连接"。
 
-或终端(推荐,能看到完整流程):
+或在聊天框输入 `/codex-login`;或终端:
 
 ```powershell
 node "$env:USERPROFILE\.dsh\profiles\web\node_modules\dsh-codex-auth\bin\codex-login.mjs"
