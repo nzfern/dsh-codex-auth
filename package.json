@@ -1,0 +1,43 @@
+{
+  "name": "dsh-codex-auth",
+  "version": "0.1.0",
+  "description": "ChatGPT (Codex) OAuth login and access-token keep-alive for the DeepSeek Harness: use your ChatGPT Plus/Pro/Team/Enterprise quota through the openai-codex provider",
+  "type": "module",
+  "main": "lib/index.js",
+  "exports": {
+    ".": "./lib/index.js",
+    "./client": "./lib/client.js",
+    "./package.json": "./package.json"
+  },
+  "bin": {
+    "dsh-codex-login": "bin/codex-login.mjs",
+    "dsh-codex-status": "bin/codex-status.mjs",
+    "dsh-codex-logout": "bin/codex-logout.mjs"
+  },
+  "files": [
+    "lib",
+    "bin",
+    "cordis.patch.yml",
+    "README.md",
+    "install.ps1",
+    "install.sh"
+  ],
+  "dsh": {
+    "bundle": {
+      "patch": "./cordis.patch.yml"
+    },
+    "client": {
+      "platform": "web"
+    }
+  },
+  "peerDependencies": {
+    "@deepseek-ai/cordis": "^4.0.1",
+    "@deepseek-ai/dsh-credentials": "^0.1.0-rc.6",
+    "@deepseek-ai/dsh-launch-environment": "^0.1.0-rc.6",
+    "@deepseek-ai/dsh-llm": "^0.1.0-rc.6",
+    "@deepseek-ai/dsh-settings": "^0.1.0-rc.6",
+    "@deepseek-ai/schemastery": "^0.1.0-rc.6",
+    "react": "^18.2.0"
+  },
+  "license": "MIT"
+}

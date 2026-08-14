@@ -1,0 +1,11 @@
+# dsh-codex-auth bundle patch: inserts the ChatGPT Codex auth plugin row.
+- insert:
+    - id: codex-auth
+      name: 'dsh-codex-auth'
+      config:
+        clientId: app_EMoamEEZ73f0CkXaXp7hrann
+        accessTokenRef: OPENAI_CODEX_ACCESS_TOKEN
+        refreshTokenRef: OPENAI_CODEX_REFRESH_TOKEN
+        refreshMarginMs: 300000
+        refreshIntervalMs: 30000
+        deviceTimeoutSeconds: 900
