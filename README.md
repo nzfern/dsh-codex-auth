@@ -1,54 +1,56 @@
 # dsh-codex-auth
 
-> Run DeepSeek Harness on your **ChatGPT (Codex) subscription quota** — one-click ChatGPT login in the UI, automatic token refresh, and a live quota badge.
+> Run DeepSeek Harness on your **ChatGPT (Codex) subscription quota** — one-click ChatGPT login in the UI, automatic token refresh, and a live remaining-quota badge.
 
 [![License: MIT](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
 [![Release](https://img.shields.io/github/v/release/nzfern/dsh-codex-auth)](https://github.com/nzfern/dsh-codex-auth/releases)
 [![Stars](https://img.shields.io/github/stars/nzfern/dsh-codex-auth)](https://github.com/nzfern/dsh-codex-auth)
-[![issues](https://img.shields.io/github/issues/nzfern/dsh-codex-auth)](https://github.com/nzfern/dsh-codex-auth/issues)
+[![issues](https://img.shields.io/github/issues/nzfern/dsh-codex-auth)](https://github.com/nzfern/dsh-codex-auth)
 
-用 **ChatGPT 账号(Plus / Pro / Team / Enterprise)的 Codex 额度**在 DeepSeek Harness 里跑模型,无需 OpenAI API key。
+**中文版:** [README.zh.md](README.zh.md)
 
-## ✨ 功能
+Run models in [DeepSeek Harness](https://github.com/deepseek-ai/deepseek-harness) using your **ChatGPT (Codex) quota** — no OpenAI API key needed. If you have a ChatGPT Plus/Pro/Team/Enterprise subscription, you already have Codex capacity; this plugin lets the Harness use it.
 
-| 功能 | 说明 |
+## ✨ Features
+
+| Feature | Description |
 | --- | --- |
-| 🔑 **UI 一键登录** | 设置 → General 里的登录卡片,点"用 ChatGPT 登录",内联显示验证链接 + 授权代码,授权后自动完成 |
-| 🔄 **Access token 自动续期** | 每 30 秒检查,临近过期自动用 refresh token 换新,无需手动处理 |
-| 📊 **用量余量悬浮** | 主页面右下角小徽标常驻显示 `Codex 余量 xx%` + 重置日期时间(可开关),绿色/橙色/红色提示余量健康度 |
-| 📈 **订阅计划与窗口** | 显示 ChatGPT 订阅计划(plus/pro…)与限流窗口(快速/每日)的剩余量 |
-| 💻 **CLI 支持** | `codex-login` / `codex-status` / `codex-logout` 命令与独立脚本,无 GUI 环境也能登录 |
+| 🔑 **One-click ChatGPT login in the UI** | Settings → General card: click "Log in with ChatGPT", authorize in the browser with the device code, done |
+| 🔄 **Automatic access-token refresh** | Checks every 30s and swaps a fresh access token from the refresh token before expiry |
+| 📊 **Remaining-quota badge** | Passive floating badge (bottom-right) with `Codex remaining xx%` + reset date/time; color-coded green/orange/red; toggleable in settings |
+| 📈 **Plan & windows** | Shows your ChatGPT plan (plus/pro/…) and per-window remaining quota (fast window / daily window) via the official WHAM usage endpoint |
+| 💻 **CLI** | `codex-login` / `codex-status` / `codex-logout` commands and standalone scripts work without a GUI |
 
-## 📸 截图
+## 📸 Screenshots
 
-*(欢迎贡献截图:设置页登录卡片、右下角余量徽标、模型选择器中的 openai-codex)*
+*(Contributions welcome: the settings login card, the quota badge, and the openai-codex model list in the model picker.)*
 
-## 🚀 一键安装(推荐)
+## 🚀 Install (recommended)
 
 ```powershell
-# 1. 确保 pnpm 可用(只需要一次)
+# 1. Make sure pnpm is available (once)
 npm install -g pnpm
 
-# 2. 安装插件到 web profile(pnpm 自动从 GitHub 拉取并注册 bundle)
+# 2. Install the plugin into the web profile (pnpm fetches from GitHub and registers the bundle)
 dsh plugin --profile web add github:nzfern/dsh-codex-auth
 
-# 3. 激活 provider 并重启
-#    在 $DSH_HOME/settings.yaml 的 llm-pi-ai.providers 下加入:
+# 3. Activate the provider and restart
+#    Under llm-pi-ai.providers in $DSH_HOME/settings.yaml add:
 #      openai-codex:
 #        apiKeyEnv: OPENAI_CODEX_ACCESS_TOKEN
-#    然后重启 dsh web
+#    Then restart dsh web
 ```
 
-或一条命令(自动装 pnpm + 装插件 + 写 settings.yaml):
+Or run the one-liner installer (installs pnpm, installs the plugin, writes settings.yaml):
 
 ```powershell
 Set-ExecutionPolicy -Scope Process Bypass; iex (irm https://raw.githubusercontent.com/nzfern/dsh-codex-auth/main/install.ps1)
 ```
 
-## 🖥️ 手动安装
+## 🖥️ Manual install
 
-1. 把本仓库克隆/下载到 profile 的插件目录,并注册为 bundle;
-2. 在 `$DSH_HOME/settings.yaml` 里激活 provider:
+1. Clone/download this repo into the profile's plugin directory and register it as a bundle.
+2. Activate the provider in `$DSH_HOME/settings.yaml`:
 
 ```yaml
 llm-pi-ai:
@@ -57,56 +59,56 @@ llm-pi-ai:
       apiKeyEnv: OPENAI_CODEX_ACCESS_TOKEN
 ```
 
-3. 重启 `dsh web`。
+3. Restart `dsh web`.
 
-## 🔑 登录
+## 🔑 Login
 
-**网页端(推荐)**:重启后打开 设置 → General,找到 "ChatGPT · Codex 额度",点 **用 ChatGPT 登录** → 按内联提示打开 `https://auth.openai.com/codex/device` 输入代码并用 ChatGPT 账号授权 → 卡片变为"已连接"。
+**Web UI (recommended)**: after restart, open Settings → General, find "ChatGPT · Codex 额度", click **Log in with ChatGPT** → follow the inline link to `https://auth.openai.com/codex/device`, enter the code and authorize with your ChatGPT account → the card flips to "Connected".
 
-**命令行**:
+**CLI**:
 
 ```powershell
 node "$env:USERPROFILE\.dsh\profiles\web\node_modules\dsh-codex-auth\bin\codex-login.mjs"
 node "$env:USERPROFILE\.dsh\profiles\web\node_modules\dsh-codex-auth\bin\codex-status.mjs"
 ```
 
-## 💡 使用
+## 💡 Usage
 
-登录后,在模型选择器里选 **openai-codex** 下的模型:
+After logging in, pick an **openai-codex** model in the model picker:
 
-- `gpt-5.4` / `gpt-5.4-mini`(支持图片输入)
+- `gpt-5.4` / `gpt-5.4-mini` (image input supported)
 - `gpt-5.5` / `gpt-5.6-luna` / `gpt-5.6-sol` / `gpt-5.6-terra`
 - `gpt-5.3-codex-spark`
 
-模型列表由 pi-ai 目录提供,自动随依赖更新。
+The model list comes from pi-ai's catalog and updates with the dependency.
 
-## ⚙️ 原理
+## ⚙️ How it works
 
-Harness 自带的 `dsh-llm-pi-ai`(底层 pi-ai 库)已内置 `openai-codex` provider(请求发往
-`https://chatgpt.com/backend-api/codex/responses`),只需要一个 **ChatGPT access token** 作为 Bearer 凭证,
-但它不负责登录和续期(access token 约 10 分钟过期)。本插件补齐 OAuth 生命周期:
+The Harness ships the `openai-codex` provider inside `dsh-llm-pi-ai` (pi-ai), which talks to
+`https://chatgpt.com/backend-api/codex/responses` with a **ChatGPT access token** as the bearer credential —
+but it cannot log in or keep the token alive (access tokens expire in ~10 minutes). This plugin fills in the OAuth lifecycle:
 
-- **设备码登录流**(与官方 Codex CLI 相同),refresh token 存入 Harness 凭据库,web 服务热加载;
-- **自动续期**:启动时 + 每 30 秒检查,用 refresh token 换新 access token;
-- **额度查询**:通过 `chatgpt.com/backend-api/wham/usage` 读取订阅计划与限流窗口余量。
+- **Device-code login flow** (same as the official Codex CLI); the refresh token is stored in the Harness credential store and hot-reloaded by the web service;
+- **Auto-refresh**: on boot and every 30s, exchange the refresh token for a fresh access token;
+- **Quota**: read plan type and window remaining from `chatgpt.com/backend-api/wham/usage`.
 
-## ❓ 常见问题
+## ❓ FAQ
 
-- **要求订阅**:Codex 需要 ChatGPT Plus / Pro / Team / Enterprise 账号(免费版额度极少或不可用)。
-- **遇到 usage limit**:ChatGPT 有速率/用量限制,错误信息会提示多久后再试。
-- **登录失效**:refresh token 被撤销(改密码、登出等)后 `/codex-status` 显示未登录,重新登录即可。
-- **余量徽标不见了**:设置 → General → "在主页面显示用量" 取消勾选了;或未登录/额度接口不可用。
-- **配置**:`$DSH_HOME/settings.yaml` 的 `codex-auth:` 节可调 clientId、凭据引用、刷新间隔等。
+- **Requires a subscription**: Codex needs ChatGPT Plus / Pro / Team / Enterprise (free tier gets little to none).
+- **Usage limit errors**: ChatGPT rate-limits Codex usage; the error tells you when to retry.
+- **Login invalidated**: if the refresh token is revoked (password change, sign-out elsewhere), `/codex-status` shows logged out; just log in again.
+- **Badge missing**: toggle "在主页面显示用量" off in Settings → General; or you're logged out / the usage endpoint is unavailable.
+- **Configuration**: the `codex-auth:` section in `$DSH_HOME/settings.yaml` can tune clientId, credential refs, refresh interval, etc.
 
-## 📦 文件
+## 📦 Files
 
-- `lib/codex.js` — OAuth 协议核心(设备码流 + 刷新 + WHAM 额度查询)
-- `lib/index.js` — 后端插件(token 保活、`/api/codex.*` 端点、命令)
-- `lib/client.js` — 前端插件(设置页登录卡片、右下角余量徽标)
+- `lib/codex.js` — OAuth protocol core (device flow, refresh, WHAM usage query)
+- `lib/index.js` — host plugin (token keep-alive, `/api/codex.*` endpoints, commands)
+- `lib/client.js` — browser plugin (settings login card, floating quota badge)
 - `bin/codex-login.mjs` / `bin/codex-status.mjs` / `bin/codex-logout.mjs` — CLI
 
-## 🤝 支持与贡献
+## 🤝 Support & Contributing
 
-- 遇到问题 → [Issues](https://github.com/nzfern/dsh-codex-auth/issues)
-- 想法与讨论 → [Discussions](https://github.com/nzfern/dsh-codex-auth/discussions)
-- 喜欢就点个 ⭐,让更多人能用上 Codex 额度!
+- Bugs → [Issues](https://github.com/nzfern/dsh-codex-auth/issues)
+- Ideas → [Discussions](https://github.com/nzfern/dsh-codex-auth/discussions)
+- Like it? Give it a ⭐ so more people can use their Codex quota!
