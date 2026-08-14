@@ -22,8 +22,8 @@ Run models in [DeepSeek Harness](https://github.com/deepseek-ai/deepseek-harness
 | 💻 **CLI** | `codex-login` / `codex-status` / `codex-logout` commands and standalone scripts work without a GUI |
 
 ## 📸 Screenshots
+<img width="1028" height="980" alt="image" src="https://github.com/user-attachments/assets/e6876200-7539-42a8-b330-94f46c61316f" />
 
-*(Contributions welcome: the settings login card, the quota badge, and the openai-codex model list in the model picker.)*
 
 ## 🚀 Install (recommended)
 
